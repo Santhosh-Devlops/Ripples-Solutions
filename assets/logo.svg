@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70" fill="none">
+  <defs>
+    <linearGradient id="ripple1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#93c5fd"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(10,10)">
+    <circle cx="30" cy="30" r="28" stroke="url(#ripple1)" stroke-width="3" fill="none" opacity="0.8"/>
+    <circle cx="30" cy="30" r="20" stroke="#3b82f6" stroke-width="2" fill="none" opacity="0.6"/>
+    <circle cx="30" cy="30" r="12" stroke="#2563eb" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <circle cx="30" cy="26" r="4" fill="#1e40af"/>
+    <ellipse cx="30" cy="34" rx="3" ry="2" fill="#60a5fa" opacity="0.8"/>
+  </g>
+  <text x="75" y="38" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#166534">RIPPLES SOLUTIONS</text>
+  <text x="75" y="52" font-family="Arial, sans-serif" font-size="9" fill="#0f766e">Innovate. Evolve. Prosper.</text>
+</svg>

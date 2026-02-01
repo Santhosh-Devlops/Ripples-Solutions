@@ -1,0 +1,16 @@
+{
+  "name": "rs",
+  "version": "1.0.0",
+  "description": "Professional website for **Ripples Solutions** — IT Systems Integrator, Lenovo Regional Sub Distributor, Sophos & Cyberoam Gold Partner.",
+  "main": "admin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

@@ -1,0 +1,9 @@
+[
+  { "icon": "🖥️", "title": "System Integration", "description": "End-to-end IT infrastructure solutions as a single point of contact for desktops, laptops, servers, networking, security, storage, and data center products." },
+  { "icon": "💻", "title": "Desktop and Laptop Solutions", "description": "Lenovo Commercial Desktops (Tiny, SFF, Tower, AIO), ThinkPad, ThinkBook, V-Series Laptops for business and enterprise." },
+  { "icon": "🖥️", "title": "Servers, Storage and Workstations", "description": "Enterprise-grade servers, storage solutions, and high-performance workstations for demanding workloads." },
+  { "icon": "🌐", "title": "Networking and Wireless", "description": "D-Link distribution for South Tamil Nadu. Comprehensive networking and wireless solutions." },
+  { "icon": "🛡️", "title": "Firewalls and Endpoint Security", "description": "Sophos and Cyberoam Gold Partner. Next-gen firewall, endpoint protection, and managed security." },
+  { "icon": "💾", "title": "Backup and Disaster Recovery", "description": "Reliable backup solutions and disaster recovery planning to protect your business data." },
+  { "icon": "🔌", "title": "Structured Cabling", "description": "Professional structured cabling solutions for clean, scalable IT infrastructure." }
+]
