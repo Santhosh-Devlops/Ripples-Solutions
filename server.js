@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'build')));
 
 // Catch-all route for React Router / SPA
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
