@@ -1,18 +1,21 @@
-// server.js
 const express = require('express');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files from build folder
-app.use(express.static(path.join(__dirname, 'build')));
+// Serve static files from the public folder
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Catch-all route for React Router / SPA
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// Home route (optional)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start server
+// Catch-all route (for SPA or unknown routes)
+app.get('/:anything(*)', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
