@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Ripples Solutions
 
 Professional website for **Ripples Solutions** — IT Systems Integrator, Lenovo Regional Sub Distributor, Sophos & Cyberoam Gold Partner.
@@ -32,3 +33,7 @@ Place your logo at `assets/logo.png` or `assets/logo.svg`. The site uses `assets
 ## Hero images
 
 Replace the Unsplash URLs in `index.html` (hero-carousel) with your own company images for a custom carousel.
+=======
+# Ripples-Solutions
+A Website For Official Purpose.It provides a platform for mailing or ordering products.
+>>>>>>> 231c983af71980bb317963f5d8fa2984204c77b5

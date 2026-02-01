@@ -12,5 +12,14 @@
   "license": "ISC",
   "dependencies": {
     "express": "^5.2.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Santhosh-Devlops/Ripples-Solutions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Santhosh-Devlops/Ripples-Solutions/issues"
+  },
+  "homepage": "https://github.com/Santhosh-Devlops/Ripples-Solutions#readme"
 }

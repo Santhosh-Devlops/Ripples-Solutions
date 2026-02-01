@@ -2,33 +2,36 @@
  * EmailJS Configuration for Ripples Solutions Contact Form
  * =========================================================
  * 
+ * Steps to use:
  * 1. Sign up at https://www.emailjs.com/ (free tier: 200 emails/month)
- * 2. Add Email Service: Dashboard > Email Services > Add New
- *    - Connect Gmail (or Outlook, etc.)
+ * 2. Add Email Service:
+ *    - Dashboard > Email Services > Add New
+ *    - Connect Gmail, Outlook, or another provider
  *    - Copy the SERVICE ID
- * 
- * 3. Create Email Template: Dashboard > Email Templates > Create New
- *    - Template ID: e.g. "ripples_contact" (copy this)
- *    - To Email: {{to_email}}        (recipient: krishnan or stephen based on brand)
- *    - From Name: {{from_name}}
- *    - Reply-To: {{from_email}}      (client's email for reply)
- *    - Subject: {{subject}}
- *    - Content (plain text):
- * 
- *      New inquiry from Ripples Solutions website
- *      ----------------------------------------
- *      {{message}}
- * 
- * 4. Get Public Key: Dashboard > Account > API Keys
+ *
+ * 3. Create Email Template:
+ *    - Dashboard > Email Templates > Create New
+ *    - Template ID: copy this (e.g., "template_maystq5")
+ *    - Set placeholders in template:
+ *       To Email: {{to_email}}
+ *       From Name: {{from_name}}
+ *       Reply-To: {{from_email}}
+ *       Subject: {{subject}}
+ *       Content: {{message}}
+ *
+ * 4. Get Public Key:
+ *    - Dashboard > Account > API Keys
  *    - Copy your Public Key
- * 
- * 5. Add domain to allowlist (if needed): Dashboard > Email Services > Your Service > Settings
- *    - Add your website domain (e.g. ripplessolutions.com, localhost) to prevent blocking
- * 
- * 6. Replace the values below with your actual IDs:
+ *
+ * 5. Add your website domain to allowlist:
+ *    - Dashboard > Email Services > Your Service > Settings
+ *    - Add domain (e.g., ripplessolutions.com or localhost)
+ *
+ * 6. Replace the values below with your actual IDs
  */
+
 window.EMAILJS_CONFIG = {
-  serviceId: 'service_hpyq3ot',     // e.g. 'service_abc123'
-  templateId: 'template_yytn9fk',   // e.g. 'template_xyz789'
-  publicKey: 'Ab4iWm_3BC9Chf8bO'      // e.g. 'abcdefghijk123456'
+  serviceId: 'service_hpyq3ot',     // Your EmailJS Service ID
+  templateId: 'template_maystq5',   // Your EmailJS Template ID
+  publicKey: 'Ab4iWm_3BC9Chf8bO'    // Your EmailJS Public Key
 };
