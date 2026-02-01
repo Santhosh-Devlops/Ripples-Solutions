@@ -1,17 +1,18 @@
+// server.js
 const express = require('express');
 const path = require('path');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve everything in current folder
-app.use(express.static(__dirname));
+// Serve static files from the build folder
+app.use(express.static(path.join(__dirname, 'build')));
 
-// Fallback to index.html
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+// Catch-all route to serve index.html for any route
+app.get('/:path(*)', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
