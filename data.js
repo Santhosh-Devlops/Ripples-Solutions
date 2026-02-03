@@ -130,6 +130,7 @@
     fetch('data/products.json')
       .then(function (r) { return r.json(); })
       .then(function (items) {
+        jsonProducts = items;
         renderProducts();
       })
       .catch(function () {

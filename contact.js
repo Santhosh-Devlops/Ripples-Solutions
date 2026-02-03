@@ -22,7 +22,6 @@
 
   let productsData = [];
 
-  // ------------------- LOGIN CHECK -------------------
   function isLoggedIn() {
     return typeof window.getCurrentUser === 'function' && window.getCurrentUser();
   }
@@ -49,7 +48,6 @@
     }
   }
 
-  // ------------------- PRODUCTS -------------------
   function getAdminProducts() {
     try {
       var raw = localStorage.getItem('ripples_admin_products');
@@ -60,27 +58,33 @@
   }
 
   function loadProducts() {
-    var adminProducts = getAdminProducts();
-    productsData = adminProducts;
-
-    if (!productSelect) return;
-
-    productSelect.innerHTML = '<option value="">— Select product —</option>';
-
-    if (adminProducts.length === 0) {
-      const opt = document.createElement('option');
-      opt.disabled = true;
-      opt.textContent = 'No products available';
-      productSelect.appendChild(opt);
-      return;
-    }
-
-    adminProducts.forEach(function (p) {
-      var opt = document.createElement('option');
-      opt.value = p.id || p.title;
-      opt.textContent = p.title;
-      productSelect.appendChild(opt);
-    });
+    fetch('data/products.json')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var adminProducts = getAdminProducts();
+        productsData = data.concat(adminProducts);
+        if (!productSelect) return;
+        productSelect.innerHTML = '<option value="">— Select product —</option>';
+        productsData.forEach(function (p) {
+          const opt = document.createElement('option');
+          opt.value = p.id || p.title;
+          opt.textContent = p.title;
+          productSelect.appendChild(opt);
+        });
+      })
+      .catch(function () {
+        var adminProducts = getAdminProducts();
+        productsData = adminProducts;
+        if (productSelect) {
+          productSelect.innerHTML = '<option value="">— Select product —</option>';
+          adminProducts.forEach(function (p) {
+            var opt = document.createElement('option');
+            opt.value = p.id || p.title;
+            opt.textContent = p.title;
+            productSelect.appendChild(opt);
+          });
+        }
+      });
   }
 
   function renderSpecs(productId) {
@@ -106,31 +110,13 @@
     });
   }
 
-  // ------------------- FORM DATA -------------------
   function getRecipientEmail(brand) {
-  if (!brand) {
+    if (!brand) return 'contact@ripplessolutions.com';
+    var b = (brand + '').toLowerCase();
+    if (b === 'lenovo') return 'stephen@ripplessolutions.com';
+    if (b === 'sophos' || b === 'dell' || b === 'dlink' || b === 'd-link') return 'krishnan@ripplessolutions.com';
     return 'contact@ripplessolutions.com';
   }
-
-  const b = brand.toLowerCase().replace(/\s+/g, '').replace('-', '');
-
-    // krishnan
-    if (
-      b === 'dlink' ||
-      b === 'sophos'
-    ) {
-      return 'krishya2005_bit27@mepcoeng.ac.in';
-    }
-
-    // stephen
-    if (b === 'lenovo') {
-      return 'sandypro2006@gmail.com';
-    }
-
-    // default
-    return 'contact@ripplessolutions.com';
-  }
-
 
   function collectFormData() {
     const brand = document.getElementById('contact-brand')?.value || '';
@@ -158,92 +144,60 @@
     return data;
   }
 
-  // ------------------- EMAIL BODY -------------------
-function formatEmailBody(data) {
-    const lines = [];
-
-    lines.push('New inquiry from Ripples Solutions website');
-    lines.push('----------------------------------------');
-    lines.push('');
-    lines.push('Client Information');
-    lines.push(`Name           : ${data.name || '-'}`);
-    lines.push(`Email          : ${data.email || '-'}`);
-    lines.push(`Phone          : ${data.phone || '-'}`);
-    lines.push(`Company        : ${data.company || '-'}`);
-    lines.push(`Logged-in user : ${data.clientEmail || '-'}`);
-    lines.push('');
-    lines.push('Brand Information');
-    lines.push(`Brand          : ${data.brand || '-'}`);
-    lines.push('');
-    lines.push('Product Information');
-    lines.push(`Product        : ${data.product || '-'}`);
-    lines.push('');
-
-    // Specifications (text-only)
-    const specs = Object.keys(data).filter(
-      k => k.startsWith('spec_') && data[k]
-    );
-
-    if (specs.length > 0) {
-      lines.push('Specifications');
-      specs.forEach(k => {
-        lines.push(`- ${k.replace('spec_', '')}: ${data[k]}`);
-      });
-      lines.push('');
-    }
-
-    lines.push('Message');
-    lines.push(data.message || '-');
-    lines.push('');
-    lines.push('----------------------------------------');
-    lines.push('Sent from Ripples Solutions website');
-
-    return lines.join('\n');
+  function formatEmailBody(data) {
+    let body = 'New inquiry from Ripples Solutions website\n\n';
+    body += '=== CLIENT ===\n';
+    body += 'Name: ' + data.name + '\n';
+    body += 'Email: ' + data.email + '\n';
+    body += 'Phone: ' + (data.phone || '-') + '\n';
+    body += 'Company: ' + (data.company || '-') + '\n';
+    body += 'Logged-in user: ' + (data.clientEmail || '-') + '\n\n';
+    body += '=== BRAND ===\n';
+    body += 'Brand: ' + (data.brand || '-') + '\n\n';
+    body += '=== PRODUCT ===\n';
+    body += 'Product: ' + data.product + '\n\n';
+    body += '=== SPECIFICATIONS ===\n';
+    Object.keys(data).forEach(function (k) {
+      if (k.startsWith('spec_') && data[k]) {
+        body += k.replace('spec_', '') + ': ' + data[k] + '\n';
+      }
+    });
+    body += '\n=== MESSAGE ===\n' + data.message;
+    return body;
   }
-
-
-
 
   function isEmailJSConfigured() {
-    return EMAILJS_CONFIG.publicKey &&
-           EMAILJS_CONFIG.serviceId &&
-           EMAILJS_CONFIG.templateId;
+    return EMAILJS_CONFIG.publicKey
+      && EMAILJS_CONFIG.publicKey !== 'YOUR_PUBLIC_KEY'
+      && EMAILJS_CONFIG.serviceId
+      && EMAILJS_CONFIG.serviceId !== 'YOUR_SERVICE_ID'
+      && EMAILJS_CONFIG.templateId
+      && EMAILJS_CONFIG.templateId !== 'YOUR_TEMPLATE_ID';
   }
 
-  // ------------------- SEND EMAIL -------------------
   function sendEmail(data) {
     if (typeof emailjs === 'undefined') {
       showToast('Email service not loaded. Check your connection.', true);
       return Promise.reject(new Error('EmailJS SDK not loaded'));
     }
-
     if (!isEmailJSConfigured()) {
-      showToast(
-        'Configure EmailJS: Edit emailjs-config.js with your Service ID, Template ID, and Public Key from emailjs.com',
-        true
-      );
+      showToast('Configure EmailJS: Edit emailjs-config.js with your Service ID, Template ID, and Public Key from emailjs.com', true);
       return Promise.reject(new Error('EmailJS not configured'));
     }
-
-    // ✅ DECLARE RECEIVER EMAIL BASED ON BRAND
-    const receiverEmail = getRecipientEmail(data.brand);
-
     try {
       emailjs.init(EMAILJS_CONFIG.publicKey);
     } catch (err) {
       showToast('Failed to initialize email service.', true);
       return Promise.reject(err);
     }
-
-    // ✅ TEMPLATE PARAMETERS
-    const params = {
-      to_email: receiverEmail,          // <-- dynamic receiver
+    var toEmail = getRecipientEmail(data.brand);
+    var params = {
+      to_email: toEmail,
       from_name: data.name || 'Website Visitor',
-      from_email: data.email || '',     // reply-to
-      subject: `Ripples Inquiry: ${data.product || ''} - ${data.name || ''}`,
-      message: formatEmailBody(data)    // plain text only
+      from_email: data.email || '',
+      subject: 'Ripples Inquiry: ' + (data.product || '') + ' - ' + (data.name || ''),
+      message: formatEmailBody(data)
     };
-
     return emailjs.send(
       EMAILJS_CONFIG.serviceId,
       EMAILJS_CONFIG.templateId,
@@ -251,9 +205,6 @@ function formatEmailBody(data) {
     );
   }
 
-
-
-  // ------------------- TOAST NOTIFICATION -------------------
   function showToast(msg, isError) {
     var toast = document.getElementById('contact-toast');
     if (!toast) {
@@ -269,7 +220,6 @@ function formatEmailBody(data) {
     toast._tid = setTimeout(function () { toast.hidden = true; }, 4000);
   }
 
-  // ------------------- HANDLE FORM SUBMIT -------------------
   function handleSubmit(e) {
     e.preventDefault();
     if (!isLoggedIn()) {
@@ -277,18 +227,15 @@ function formatEmailBody(data) {
       showToast('Please log in to submit an inquiry.', true);
       return;
     }
-
     var data = collectFormData();
     if (!data.brand || !data.product || !data.name || !data.email || !data.message) {
       showToast('Please fill all required fields including Brand.', true);
       return;
     }
-
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending...';
     }
-
     sendEmail(data)
       .then(function () {
         showToast('Inquiry sent to Ripples Solutions.');
@@ -308,7 +255,6 @@ function formatEmailBody(data) {
       });
   }
 
-  // ------------------- EVENT LISTENERS -------------------
   if (productSelect) {
     productSelect.addEventListener('change', function () {
       renderSpecs(productSelect.value);
@@ -321,6 +267,6 @@ function formatEmailBody(data) {
 
   loadProducts();
   updateFormState();
-  setInterval(updateFormState, 1000);
 
+  setInterval(updateFormState, 1000);
 })();

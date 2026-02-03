@@ -1,43 +1,65 @@
 /**
- * Admin Add Products - visible only for contact@ripplessolutions.com
- * Products saved to localStorage, merged with JSON for display
+ * Admin Add / Remove Products
+ * Visible only for admins
+ * Products saved to localStorage and visible to all users
  */
 (function () {
   'use strict';
 
-  const ADMIN_EMAIL = 'stephen@ripplessolutions.com';
+  const ADMIN_EMAILS = [
+    'stephen@ripplessolutions.com',
+    'krishnan@ripplessolutions.com'
+  ];
+
   const STORAGE_KEY = 'ripples_admin_products';
 
   const addProductsBtn = document.getElementById('add-products-btn');
+  const removeProductsBtn = document.getElementById('remove-products-btn');
+
   const adminModal = document.getElementById('admin-modal');
   const adminForm = document.getElementById('admin-product-form');
 
+  const removeModal = document.getElementById('remove-product-modal');
+  const removeForm = document.getElementById('remove-product-form');
+  const removeSelect = document.getElementById('remove-product-select');
+
+  /* ---------- ADMIN CHECK ---------- */
   function isAdmin() {
-    if (typeof window.isRipplesAdmin !== 'function') return false;
-    return window.isRipplesAdmin();
+    if (typeof window.isRipplesAdmin === 'function') {
+      return window.isRipplesAdmin();
+    }
+
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    return user && ADMIN_EMAILS.includes(user.email);
   }
 
   function checkAdminVisibility() {
-    if (addProductsBtn) addProductsBtn.style.display = isAdmin() ? '' : 'none';
+    const visible = isAdmin();
+    if (addProductsBtn) addProductsBtn.style.display = visible ? '' : 'none';
+    if (removeProductsBtn) removeProductsBtn.style.display = visible ? '' : 'none';
   }
 
+  /* ---------- STORAGE ---------- */
   function getAdminProducts() {
     try {
-      var raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(STORAGE_KEY);
       return raw ? JSON.parse(raw) : [];
-    } catch (e) {
+    } catch {
       return [];
     }
   }
 
-  function saveAdminProducts(list) {
+  function saveAdminProducts(list, toastMsg) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    if (typeof window.refreshProducts === 'function') window.refreshProducts();
-    showToast('Product added successfully. It is now visible to all visitors.');
+    if (typeof window.refreshProducts === 'function') {
+      window.refreshProducts();
+    }
+    if (toastMsg) showToast(toastMsg);
   }
 
+  /* ---------- TOAST ---------- */
   function showToast(msg) {
-    var toast = document.getElementById('admin-toast');
+    let toast = document.getElementById('admin-toast');
     if (!toast) {
       toast = document.createElement('div');
       toast.id = 'admin-toast';
@@ -47,96 +69,142 @@
     toast.textContent = msg;
     toast.hidden = false;
     clearTimeout(toast._tid);
-    toast._tid = setTimeout(function () { toast.hidden = true; }, 4000);
+    toast._tid = setTimeout(() => (toast.hidden = true), 4000);
   }
 
+  /* ---------- ADD PRODUCT MODAL ---------- */
   function openAdminModal() {
-    if (!adminModal || !isAdmin()) return;
+    if (!isAdmin() || !adminModal) return;
     adminModal.removeAttribute('hidden');
     document.body.style.overflow = 'hidden';
-    if (adminForm) adminForm.reset();
+    adminForm?.reset();
   }
 
   function closeAdminModal() {
-    if (!adminModal) return;
-    adminModal.setAttribute('hidden', '');
+    adminModal?.setAttribute('hidden', '');
     document.body.style.overflow = '';
   }
 
-  adminModal?.addEventListener('click', function (e) {
-    if (e.target === adminModal || e.target.closest('[data-close="admin"]')) closeAdminModal();
+  addProductsBtn?.addEventListener('click', e => {
+    e.preventDefault();
+    openAdminModal();
   });
 
-  adminModal?.querySelector('.modal-dialog')?.addEventListener('click', function (e) { e.stopPropagation(); });
-
-  addProductsBtn?.addEventListener('click', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (isAdmin()) openAdminModal();
+  adminModal?.addEventListener('click', e => {
+    if (e.target.closest('[data-close="admin"]')) closeAdminModal();
   });
 
-  adminForm?.addEventListener('submit', function (e) {
+  adminForm?.addEventListener('submit', e => {
     e.preventDefault();
-    var title = adminForm.title?.value?.trim();
-    var desc = adminForm.description?.value?.trim();
-    var specsText = adminForm.specs?.value?.trim();
-    var fileInput = adminForm.file;
+
+    const title = adminForm.title.value.trim();
+    const desc = adminForm.description.value.trim();
+    const specsText = adminForm.specs.value.trim();
+    const file = adminForm.file.files[0];
 
     if (!title || !desc) return;
 
-    var specs = {};
+    const specs = {};
     if (specsText) {
-      specsText.split('\n').forEach(function (line) {
-        var idx = line.indexOf(':');
+      specsText.split('\n').forEach(line => {
+        const idx = line.indexOf(':');
         if (idx > 0) {
-          var k = line.slice(0, idx).trim();
-          var v = line.slice(idx + 1).trim();
-          if (k) specs[k] = v;
+          specs[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
         }
       });
     }
 
-    var product = {
+    const product = {
       id: 'admin-' + Date.now(),
-      title: title,
+      title,
       description: desc,
-      specs: specs,
+      specs,
       imageData: null,
+      fileName: null,
       isAdmin: true
     };
 
-    var file = fileInput?.files?.[0];
-    if (file) {
-      if (file.type.startsWith('image/')) {
-        var fr = new FileReader();
-        fr.onload = function () {
-          product.imageData = fr.result;
-          product.fileName = file.name;
-          var list = getAdminProducts();
-          list.push(product);
-          saveAdminProducts(list);
-          adminForm.reset();
-          closeAdminModal();
-        };
-        fr.readAsDataURL(file);
-      } else {
-        product.fileName = file.name;
-        product.fileType = file.type;
-        var list = getAdminProducts();
-        list.push(product);
-        saveAdminProducts(list);
-        adminForm.reset();
-        closeAdminModal();
-      }
-    } else {
-      var list = getAdminProducts();
+    const saveProduct = () => {
+      const list = getAdminProducts();
       list.push(product);
-      saveAdminProducts(list);
+      saveAdminProducts(list, 'Product added successfully. Visible to all users.');
       adminForm.reset();
       closeAdminModal();
+    };
+
+    if (file && file.type.startsWith('image/')) {
+      const fr = new FileReader();
+      fr.onload = () => {
+        product.imageData = fr.result;
+        product.fileName = file.name;
+        saveProduct();
+      };
+      fr.readAsDataURL(file);
+    } else {
+      if (file) product.fileName = file.name;
+      saveProduct();
     }
   });
 
-  setInterval(checkAdminVisibility, 500);
+  /* ---------- REMOVE PRODUCT ---------- */
+  function populateRemoveProductDropdown() {
+    if (!removeSelect) return;
+
+    removeSelect.innerHTML = '';
+    const products = getAdminProducts();
+
+    if (products.length === 0) {
+      const opt = document.createElement('option');
+      opt.textContent = 'No products available';
+      opt.disabled = true;
+      opt.selected = true;
+      removeSelect.appendChild(opt);
+      return;
+    }
+
+    const def = document.createElement('option');
+    def.textContent = '-- Select Product --';
+    def.value = '';
+    def.disabled = true;
+    def.selected = true;
+    removeSelect.appendChild(def);
+
+    products.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = p.title;
+      removeSelect.appendChild(opt);
+    });
+  }
+
+  removeProductsBtn?.addEventListener('click', () => {
+    if (!isAdmin()) return;
+    populateRemoveProductDropdown();
+    removeModal.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+  });
+
+  removeModal?.addEventListener('click', e => {
+    if (e.target.closest('[data-close="remove"]')) {
+      removeModal.setAttribute('hidden', '');
+      document.body.style.overflow = '';
+    }
+  });
+
+  removeForm?.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const id = removeSelect.value;
+    if (!id) return;
+
+    const products = getAdminProducts().filter(p => p.id !== id);
+    saveAdminProducts(products, 'Product removed successfully.');
+
+    removeModal.setAttribute('hidden', '');
+    document.body.style.overflow = '';
+  });
+
+  /* ---------- INIT ---------- */
   checkAdminVisibility();
+  setInterval(checkAdminVisibility, 500);
 })();

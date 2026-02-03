@@ -32,6 +32,7 @@
           <a href="#about" class="btn btn-nav">About</a>
           <a href="#contact" class="btn btn-nav">Contact Us</a>
           <button type="button" class="btn btn-nav btn-admin" id="add-products-btn" style="display: none;">Add Products</button>
+          <button type="button" class="btn btn-nav btn-admin" id="remove-products-btn" style="display: none;">Remove Products</button>
         </nav>
         <div class="header-actions">
           <div class="header-actions-auth">
@@ -180,7 +181,7 @@
             <h3 class="contact-info-title">Head Office – Madurai</h3>
             <p class="contact-address">45, Adhimoolam Pillai Agraharam, Simmakkal, Madurai – 625001</p>
             <p><a href="tel:04524354543">📞 0452 – 4354543</a></p>
-            <p><a href="mailto:stephen@ripplessolutions.com">stephen@ripplessolutions.com</a></p>
+            <p><a href="mailto:contact@ripplessolutions.com">contact@ripplessolutions.com</a></p>
             <h3 class="contact-info-title">Branch Offices</h3>
             <div class="contact-branch">
               <strong>Virudhunagar</strong> – 90/7, Kasukkadai Bazaar<br><a href="tel:04562266544">04562 – 266544</a>
@@ -219,7 +220,7 @@
         <ul class="footer-details">
           <li><span class="label">Madurai</span>45, Adhimoolam Pillai Agraharam, Simmakkal – 625001</li>
           <li><span class="label">Phone</span><a href="tel:04524354543">0452 – 4354543</a></li>
-          <li><span class="label">Email</span><a href="mailto:stephen@ripplessolutions.com">stephen@ripplessolutions.com</a></li>
+          <li><span class="label">Email</span><a href="mailto:contact@ripplessolutions.com">stephen@ripplessolutions.com</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -335,6 +336,29 @@
     </div>
   </div>
 
+<!-- Remove Product Modal -->
+<div id="remove-product-modal" class="modal" hidden>
+  <div class="modal-backdrop" data-close="remove"></div>
+
+  <div class="modal-dialog admin-dialog">
+    <button class="modal-close" data-close="remove">&times;</button>
+
+    <h3 class="admin-heading">Remove Product</h3>
+
+    <form id="remove-product-form" class="admin-form">
+      <label>Select Product</label>
+
+      <select id="remove-product-select" required></select>
+
+      <button type="submit" class="btn btn-danger">
+        Remove Product
+      </button>
+    </form>
+  </div>
+</div>
+
+
+
   <!-- Product Detail Modal (flash card click) -->
   <div id="product-detail-modal" class="modal" hidden>
     <div class="modal-backdrop" data-close="product-detail"></div>
@@ -345,14 +369,11 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script src="emailjs-config.js"></script>
   <script src="data.js"></script>
   <script type="module" src="auth.js"></script>
   <script src="admin.js"></script>
   <script src="contact.js"></script>
   <script src="script.js"></script>
-  
-
 </body>
 </html>

@@ -5,7 +5,7 @@
 (function () {
   'use strict';
 
-  const ADMIN_EMAIL = 'stephen@ripplessolutions.com';
+  const ADMIN_EMAIL = 'contact@ripplessolutions.com';
   const STORAGE_KEY = 'ripples_admin_products';
 
   const addProductsBtn = document.getElementById('add-products-btn');
