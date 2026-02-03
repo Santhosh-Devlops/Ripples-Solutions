@@ -32,6 +32,7 @@
           <a href="#about" class="btn btn-nav">About</a>
           <a href="#contact" class="btn btn-nav">Contact Us</a>
           <button type="button" class="btn btn-nav btn-admin" id="add-products-btn" style="display: none;">Add Products</button>
+          <button type="button" class="btn btn-nav btn-admin" id="remove-products-btn" style="display: none;">Remove Products</button>
         </nav>
         <div class="header-actions">
           <div class="header-actions-auth">
@@ -334,6 +335,29 @@
       </form>
     </div>
   </div>
+
+  <!-- Remove Product Modal -->
+  <div id="remove-product-modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close="remove"></div>
+  
+    <div class="modal-dialog admin-dialog">
+      <button class="modal-close" data-close="remove">&times;</button>
+  
+      <h3 class="admin-heading">Remove Product</h3>
+  
+      <form id="remove-product-form" class="admin-form">
+        <label>Select Product</label>
+  
+        <select id="remove-product-select" required></select>
+  
+        <button type="submit" class="btn btn-danger">
+          Remove Product
+        </button>
+      </form>
+    </div>
+  </div>
+
+
 
   <!-- Product Detail Modal (flash card click) -->
   <div id="product-detail-modal" class="modal" hidden>
