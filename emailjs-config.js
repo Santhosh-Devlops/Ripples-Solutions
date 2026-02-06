@@ -28,7 +28,7 @@
  * 6. Replace the values below with your actual IDs:
  */
 window.EMAILJS_CONFIG = {
-  serviceId: 'YOUR_SERVICE_ID',     // e.g. 'service_abc123'
-  templateId: 'YOUR_TEMPLATE_ID',   // e.g. 'template_xyz789'
-  publicKey: 'YOUR_PUBLIC_KEY'      // e.g. 'abcdefghijk123456'
+  serviceId: 'service_hpyq3ot',     // e.g. 'service_abc123'
+  templateId: 'template_maystq5',   // e.g. 'template_xyz789'
+  publicKey: 'Ab4iWm_3BC9Chf8bO'      // e.g. 'abcdefghijk123456'
 };
